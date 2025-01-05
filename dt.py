@@ -31,16 +31,26 @@ Explanation of features in the dataset:
    the code, this is important as test cases invoke the main method for evaluation.
    
 '''
-
+# for numerical computations
 import numpy as np
+# to handle tabular data using dataframes
 import pandas as pd
 
+# decision tree class 
+
 class DecisionTreeClassifierGini:
+   # max depth of the tree -- to limit tree size to prevent overfitting
+   # tree -- acts as a placeholder for dt structure
     def __init__(self, max_depth=None):
         self.max_depth = max_depth
         self.tree = None
 
     def gini_impurity(self, y):
+        # Measures the "purity" of a dataset. A Gini Impurity value of 0 means all samples belong to one class.
+        # np.unique takes an array as input and returns 1) unique classes (0 & 1) & 2) if return_counts is True, returns counts of each class 
+        # classes = [0,1] counts = [3,3]
+        # probabilities stores the probs of each class [0.5,0.5]
+        # gini_impurity val computes the impurity 
         # your code here
         classes, counts = np.unique(y,return_counts=True)
         probabilities = counts / len(y)
@@ -48,11 +58,18 @@ class DecisionTreeClassifierGini:
         return gini_impurity_val
 
     def split(self, X_column, threshold):
+      # takes a single feature column from training dataset and splits it into two groups
+      # threshold is used to categorise 
+       # left indices stores a list of boolean mask (if in left True else False)
         # your code here
         left_indices = X_column <= threshold
         right_indices = X_column > threshold
         return left_indices, right_indices
 
+   #computes the Gini Impurity for a split of the dataset based on the given left_indices and right_indices.
+   #It calculates the weighted Gini Impurity for the two groups (left and right) and returns the combined impurity of the split.
+#If either of the groups (left or right) is empty (n_left == 0 or n_right == 0), the function returns infinity (float('inf')).
+#This is done to prevent invalid splits where one group doesn't have any data
     def calculate_gini_split(self, y, left_indices, right_indices):
         # your code here
         n = len(y)
@@ -64,6 +81,7 @@ class DecisionTreeClassifierGini:
         
         gini_left = self.gini_impurity(y[left_indices])
         gini_right = self.gini_impurity(y[right_indices])
+       #computes the weighted average of the Gini Impurities of the left and right groups
         gini = (n_left/n)* gini_left + (n_right/n) * gini_right
         return gini
 
