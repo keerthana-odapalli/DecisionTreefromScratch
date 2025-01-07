@@ -25,13 +25,15 @@ The dataset contains 200 samples, with 100 samples each for Non-diabetic and Dia
 2. Boiler plate code is pre-defined for you, the missing logic must be implemented correctly.
 3. The "main" method must run and generate output in the format specified in the code, this is important as test cases invoke the main method for evaluation.
 '''
-
+# for math operations
 import numpy as np
+# for handling tabular data using dataframes
 import pandas as pd
 
 # NOTE: This is programmatically generated sample dataset, it does not follow the standard ranges of the features (Glucose, BMI, Age).
 # Generate a synthetic diabetes dataset
 def generate_diabetes_data():
+   # seed is set so that the results are reproducible. The same random numbers are produced every time.
     np.random.seed(42)
     # Generate data for two classes: Non-diabetic and Diabetic
     non_diabetic = np.random.multivariate_normal(mean=[2, 2, 2], cov=np.eye(3), size=100)
@@ -41,7 +43,7 @@ def generate_diabetes_data():
     non_diabetic_labels = np.zeros(non_diabetic.shape[0])
     diabetic_labels = np.ones(diabetic.shape[0])
 
-    # Combine the data and labels
+    # Combine the data and labels (vertical stacking of diabetic and non diabetic data & horizontal stacking of their labels)
     data = np.vstack((non_diabetic, diabetic))
     labels = np.hstack((non_diabetic_labels, diabetic_labels))
 
@@ -70,6 +72,7 @@ def train_svm(X, y, learning_rate=0.01, epochs=1000, lambda_param=0.01):
 
 # Make predictions
 def predict(X, weights, bias):
+   #to convert the decision function's output into discrete predictions (+1 or -1), which correspond to the SVM's two possible classes
     pred = np.sign(np.dot(X, weights) - bias)
     return pred
 
